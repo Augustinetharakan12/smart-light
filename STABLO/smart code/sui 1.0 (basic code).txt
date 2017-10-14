@@ -1,0 +1,31 @@
+void setup() 
+{
+Serial.begin(9600);  
+pinMode(13,OUTPUT);
+}
+int bc=0,dc=0;
+
+void loop() 
+{
+ float x=analogRead(A0);
+ Serial.println(x);
+ if(x<10.00)
+ {
+  bc=0; 
+  dc++;
+  if(dc>20)
+  {
+   digitalWrite(13,1);
+  }
+ }  
+ else if(x>10)
+ {
+  bc++;
+  dc=0;
+  if(bc>20)
+  {
+   digitalWrite(13,0);
+  }
+ } 
+delay(10000);
+}
