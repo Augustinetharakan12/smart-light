@@ -54,7 +54,7 @@ if(light<3)
   buff2a=((buff/de)*1000);
   }
  }  
- else if(x>k)
+ else if(x>=k)
  {
   bc++;
   if(o==0)
