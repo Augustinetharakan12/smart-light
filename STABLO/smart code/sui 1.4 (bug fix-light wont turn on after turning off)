@@ -1,0 +1,79 @@
+void setup() 
+{
+Serial.begin(9600);  
+pinMode(13,OUTPUT);
+}
+
+float bc=0,dc=0,de=1000,k=4;   //bc-bright counter.... dc-dark counter...de-overall delay in milli seconds x...k-brightness
+float ao=3; //(auto off timer in hours)
+long l=0;       //for auto off
+float ln=(((ao*3600)/de)*1000); //ln-algorithm for finding auto off time with respect to the overall delay
+float buff=120; //min time before the decision has to be made in seconds
+float buff1a=((buff/de)*1000); //algorithm for finding the buff with respect to the main delay (during dark)
+float buff2a=((buff/de)*1000); //algorithm for finding the buff with respect to the main delay  (during bright)
+int o=0; //indication of the bulb,1-ON,0-OFF
+int light=0;
+void loop() 
+{
+if(light<3)
+ {
+ light++;
+ if(analogRead(A0)<4)
+ buff1a=0;
+ } 
+ Serial.print(ln);
+ Serial.print(" buff1a=");
+ Serial.print(buff1a);
+ Serial.print(" buff2a=");
+ Serial.print(buff2a);
+ Serial.print(" dc=");
+ Serial.print(dc);
+ Serial.print(" bc=");
+ Serial.print(bc);
+ Serial.print(" o=");
+ Serial.print(o);
+ Serial.print(" x=");
+ float x=analogRead(A0);
+ Serial.print(x);
+ Serial.print(" k=");
+ Serial.println(k);
+ if(x<k)
+ {
+  dc++;
+  bc=0;
+  if(dc>buff1a && l<ln)
+  { 
+   digitalWrite(13,1);
+   o=1;
+  }
+  else if(l>=ln)
+  {
+  digitalWrite(13,0);
+  o=0;
+  buff1a=((buff/de)*1000);
+  buff2a=((buff/de)*1000);
+  }
+ }  
+ else if(x>k)
+ {
+  bc++;
+  if(dc > buff1a)
+    dc++;
+  if(o==0)
+   dc=0;
+  if(bc>buff2a)
+  {
+   l=0;
+   digitalWrite(13,0);
+   o=0;
+   dc=0;
+  }
+ } 
+ if(o==1)
+ {
+ l++;
+ Serial.print(l);
+ Serial.print(" ");
+ }
+ delay(de);
+}

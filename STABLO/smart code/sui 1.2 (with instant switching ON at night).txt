@@ -64,6 +64,7 @@ if(light<3)
    l=0;
    digitalWrite(13,0);
    o=0;
+   bc=0;
   }
  } 
  if(o==1)
